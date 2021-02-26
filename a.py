@@ -1,24 +1,36 @@
-import sys
-import urllib
-import urllib.request as urllib1
+import re
+import random
+RE_NONTERMINAL = re.compile(r'(@[^@@ ]*@)')
+def nonterminals(expansion):
+    # In later chapters, we allow expansions to be tuples,
+    # with the expansion being the first element
+    if isinstance(expansion, tuple):
+        expansion = expansion[0]
 
+    return re.findall(RE_NONTERMINAL, expansion)
 
-fullurl = input("Url: ")
-errormsg = ["You have an error in your SQL syntax", "Warning: mysql_fetch_array()"]
-f = open("payload", "r")
-errorr = "yes"
+START_SYMBOL = "@start@"
 
-for payload in f:
-    resp = urllib1.urlopen(fullurl + urllib.parse.quote_plus(payload))
-    body = resp.read()
-    fullbody = body.decode('utf-8')
+def simple_grammar_fuzzer(grammar, start_symbol=START_SYMBOL,
+                          max_nonterminals=20, max_expansion_trials=100,
+                          log=False):
+    term = start_symbol
+    expansion_trials = 0
 
-    for error in errormsg:
-        if error in fullbody:
-            if errorr == "no":
-                print ("[-] That payload might not work!")
-                errorr = "yes"
-            else:
-                print ("[+] The website is SQL injection vulnerable! Payload: " + payload)
+    while len(nonterminals(term)) > 0:
+        symbol_to_expand = random.choice(nonterminals(term))
+        expansions = grammar[symbol_to_expand]
+        expansion = random.choice(expansions)
+        new_term = term.replace(symbol_to_expand, expansion, 1)
 
-f.close()
+        if len(nonterminals(new_term)) < max_nonterminals:
+            term = new_term
+            #if log:
+            #    print("%-40s" % (symbol_to_expand + " -> " + expansion), term)
+            expansion_trials = 0
+        else:
+            expansion_trials += 1
+            #if expansion_trials >= max_expansion_trials:
+            #    raise ExpansionError("Cannot expand " + repr(term))
+
+    return term
