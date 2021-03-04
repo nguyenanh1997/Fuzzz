@@ -14,3 +14,21 @@ Trong Crawler.py
      - Bổ sung thêm hàm check csrf token trong source page
 		 - Bổ sung thêm hàm check csrf token trong cookies(kiểm tra luôn samesite)
 		 - Bổ sung thêm hàm check csrf token trong header response  
+
+
+X-Requested-By
+X-Requested-With
+X-XSRF-TOKEN 
+X-CSRF-TOKEN 
+CSRF-TOKEN 
+XSRF-TOKEN 
+Authorization 
+Origin
+
+csrf_params_names = [  # Parameters that may contain CSRF tokens
+    "csrf",
+    "xsrf",
+    "token",
+    "auth",
+    "secret"
+]
