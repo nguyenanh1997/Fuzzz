@@ -1,6 +1,12 @@
 Tối nay test LFI module
 
 
+XSS
+SQLi
+CSRF
+LFI
+
+
 
 
 https://github.com/D35m0nd142/LFISuite LFI
