@@ -198,12 +198,12 @@ class crawler(object):
                     self.formList.append(returnLink)
                 linklist.append(current_url)
         print("+ End crawling")
-        myset = set()
-        
+        res = []
         for i in self.formList:
-            thing = tuple(i)
-            myset.add(thing)
-        return myset
+            if i not in res:
+                res.append(i)
+
+        return res
 
 
     def test_crawler_form(self):
@@ -216,9 +216,9 @@ class crawler(object):
             soup = self.get_soup(html)
             if soup is not None:  #If we have soup - parse and write to our csv file
                 self.get_form(soup, current_url)
-
+'''
 crawl = crawler("http://localhost/dvwa/", [] ,{"PHPSESSID" :"4d941bcfe827b38defd30d665a525a40"})
 listedCrawl = crawl.run_crawler()
 for i in listedCrawl:
     print (i)
-
+'''

@@ -96,9 +96,9 @@ class xssPayload:
                 #source = conn.normal_POST(url, params="text", payload="\"><script>alert(1)</script>")
                 # give up post method, because xss via post method not damage much to web site. 
                 if method == "GET" or method == "get":
-                    source = conn.gett(url,params, payloadss[x], cookie)
+                    source = conn.render_GET(url,params, payloadss[x], cookie)
                 elif method == "POST" or method == "post":
-                    source = conn.postt(url, params, payloadss[x],cookie)
+                    source = conn.normal_POST(url, params, payloadss[x],cookie)
                 if source == None:
                     continue
                 
@@ -108,7 +108,7 @@ class xssPayload:
 
             j = j - 1
             if check == 1:
-                print("XSS: " + url)
+                print("[+] XSS: " + url + " payload: " +url)
                 break
         if check == 0:
             print("[+] " + url + " is not vulnerable to XSS")
@@ -116,15 +116,9 @@ class xssPayload:
 
 from crawler import crawler
 a = xssPayload()
-cookie = {"PHPSESSID" : "f2c280e624310d43cafd4cebf90a1768", "security": "low"}
+cookie = {"PHPSESSID" : "4d941bcfe827b38defd30d665a525a40", "security": "low"}
 crawl = crawler("http://localhost/dvwa/", [] ,cookie)
 listedCrawl = crawl.run_crawler()
 
 for i in listedCrawl:
-    print(i)
-
-    
-
-
-
     a.scan(i[0], i[2],cookie, i[1])
