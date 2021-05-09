@@ -114,8 +114,9 @@ class lfi():
             x = x+1
             y = random.randrange(0, len(payloads))
             #url, method, params, payload, cookie
-            print(payloads[x])
-            self.scanner(url, method, params, payload[x], cookie)
+            check = self.scanner(url, method, params, payload[x], cookie)
+            if check == 1:
+                break
             if x == 5: 
                 break
 
@@ -151,20 +152,20 @@ class lfi():
                 for j in detect_http_version:
                     if i in content and j in content:
                         print("LFI : " + url)
-                        return 0
+                        return 1
         else: # detect linux file
             if "/etc/passwd" in website:
                 self.detect_1(url, content, detect_etc_passwd)
                 
             if "/proc/self/environ" in website:
                 self.detect_1(url, content, detect_proc_self_environ)
-
+        return 0
 from crawler import crawler
 a = lfi()
-cookie = {"PHPSESSID" : "f2c280e624310d43cafd4cebf90a1768", "security": "low"}
+cookie = {"PHPSESSID" : "4d941bcfe827b38defd30d665a525a40", "security": "low"}
 crawl = crawler("http://localhost/dvwa/", [] ,cookie)
 listedCrawl = crawl.run_crawler()
 
 for i in listedCrawl:
-    print(i)
+
     a.scan(i[0],i[1],i[2], cookie )
